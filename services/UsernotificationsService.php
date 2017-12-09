@@ -15,12 +15,14 @@ class UsernotificationsService extends BaseApplicationComponent{
      */
     public function getAllNotificationsForUser($userId = null){
         // check if user is logged in...
-        if(!$user = craft()->userSession->getUser() && $userId === null){
+        if(!$user = craft()->userSession){
             return false;
         }
+
         if($userId === null){
             $userId = $user->id;
         }
+
 
         // fetch all removed notifications of the user to not fetch them in our query
         $removedNotifications = craft()->db->createCommand()
