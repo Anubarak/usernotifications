@@ -13,7 +13,7 @@ class UsernotificationsService extends BaseApplicationComponent{
     public function getAllNotificationsForUser(){
         // check if user is logged in...
         if(!craft()->userSession->getUser()){
-            return "";
+            return false;
         }
 
         // fetch all removed notifications of the user to not fetch them in our query
@@ -25,8 +25,11 @@ class UsernotificationsService extends BaseApplicationComponent{
 
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = 'usernotifications';
-        // user should not be overwhelmed with notification when they don't log in
-        // for too many days, so show only notifications 14 days ago
+        // user should not be overwhelmed with too many notification when they didn't log in for too long
+        // so show only notifications 14 days ago, you can change this length or remove it if you want
+        // but make sure to change the value in the task as well.
+        // you could also create settings for the plugin where you can store how long
+        // then entries should be displayed
         $someDateInThePast = date('U', strtotime("-14 days"));
 
         $criteria->postDate = "> " . $someDateInThePast;
@@ -35,19 +38,6 @@ class UsernotificationsService extends BaseApplicationComponent{
             $criteria->id = 'and, not ' . implode(', not ', $removedNotifications);
         }
 
-        $html = '';
-        // I get an deprecated hint here, but the solution stated above the method throws
-        // an exception... So I'm using this one.
-        $oldPath = craft()->path->getTemplatesPath();
-        $newPath = craft()->path->getPluginsPath() . 'usernotifications/templates';
-        craft()->path->setTemplatesPath($newPath);
-        if($entries = $criteria->find()){
-            $html = craft()->templates->render('entries/index.twig', array(
-                'entries' => $entries
-            ));
-        }
-        craft()->path->setTemplatesPath($oldPath);
-
-        return $html;
+        return $criteria->find();
     }
 }

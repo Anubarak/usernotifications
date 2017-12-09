@@ -70,6 +70,9 @@ class UsernotificationsController extends BaseController
         $this->returnJson($response);
     }
 
+    /**
+     * you can access this via /admin/actions/usernotifications/removeOldRecords
+     */
     public function actionRemoveOldRecords(){
         craft()->tasks->createTask('Usernotifications');
         echo 'Task created!';

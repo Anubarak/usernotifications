@@ -33,6 +33,19 @@ class UsernotificationsVariable{
      *     {{ craft.usernotifications.exampleVariable(twigValue) }}
      */
     public function getAllNotificationsForUser(){
-        return craft()->usernotifications->getAllNotificationsForUser();
+        $html = '';
+        $entries = craft()->usernotifications->getAllNotificationsForUser();
+        if($entries){
+            // I get a deprecated hint here, but the solution stated in craft throws
+            // an exception... So I'm using this one
+            $oldPath = craft()->path->getTemplatesPath();
+            $newPath = craft()->path->getPluginsPath() . 'usernotifications/templates';
+            craft()->path->setTemplatesPath($newPath);
+            $html = craft()->templates->render('entries/index.twig', array(
+                'entries' => $entries
+            ));
+            craft()->path->setTemplatesPath($oldPath);
+        }
+        return $html;
     }
 }
