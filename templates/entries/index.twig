@@ -1,0 +1,7 @@
+{% includeJsResource "usernotifications/js/jquery.min.js" %}
+{% includeJsResource "usernotifications/js/java.js" %}
+{% includeCssResource "usernotifications/css/style.css" %}
+
+{% for entry in entries %}
+    {% include 'entries/entrytypes/' ~ entry.type.handle ~ '.twig' %}
+{% endfor %}

@@ -1,0 +1,14 @@
+{
+	"name": "Anubarak/usernotifications",
+	"description": "A plugin to display notifications",
+	"type": "craft-plugin",
+	"authors": [
+		{
+			"name": "Robin Schambach",
+			"homepage": "www.secondre.de"
+		}
+	],
+	"require": {
+		"composer/installers": "~1.0"
+	}
+}
