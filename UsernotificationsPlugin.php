@@ -154,6 +154,51 @@ class UsernotificationsPlugin extends BasePlugin
      */
     public function onAfterInstall()
     {
+        // create the section for you if it does not exist
+        $section = craft()->sections->getSectionByHandle('usernotifications');
+        if($section) return true;
+        $section = new SectionModel();
+
+        // Shared attributes
+        $section->enableVersioning = false;
+
+        // Type-specific attributes
+        $section->hasUrls    = false;
+        $section->template   = "";
+        $section->maxLevels  = 2;
+
+        $section->handle = 'usernotifications';
+        $section->name = "Usernotifications";
+        $section->type = SectionType::Channel;
+
+        if (craft()->isLocalized())
+        {
+            $localeIds = craft()->request->getPost('locales', array());
+        }
+        else
+        {
+            $primaryLocaleId = craft()->i18n->getPrimarySiteLocaleId();
+            $localeIds = array($primaryLocaleId);
+        }
+        foreach ($localeIds as $localeId)
+        {
+
+            $locales[$localeId] = new SectionLocaleModel(array(
+                'locale'           => $localeId,
+                'enabledByDefault' => true,
+                'urlFormat'        => "1",
+                'nestedUrlFormat'  => "1",
+            ));
+        }
+        $section->setLocales($locales);
+        $s = craft()->sections->saveSection($section);
+
+        for($i = 0; $i < 5; $i++){
+            $entry = new EntryModel();
+            $entry->setAttribute('sectionId' , $section->id);
+
+            $entry->getContent()->setAttribute('title', 'Notification nr '.$i);
+        }
     }
 
     /**
