@@ -22,7 +22,7 @@ During the install process a new section `usernotifications` is created with 5 t
 
 For example when you create a new entry type `onlyAdminsSeeMee` and the file `usernotifications/templates/entries/entrytypes/onlyAdminsSeeMee` and include 
 ```twig
-{% if currentUser.iAdmin() %}
+{% if currentUser.isAdmin() %}
      hey admin, here is a new message {{ entry.content }}
 {% endif %}
 ``` 
