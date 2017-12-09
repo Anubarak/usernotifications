@@ -32,9 +32,9 @@ class UsernotificationsVariable{
      *
      *     {{ craft.usernotifications.exampleVariable(twigValue) }}
      */
-    public function getAllNotificationsForUser(){
+    public function getAllNotificationsForUser($userId = null){
         $html = '';
-        $entries = craft()->usernotifications->getAllNotificationsForUser();
+        $entries = craft()->usernotifications->getAllNotificationsForUser($userId);
         if($entries){
             // I get a deprecated hint here, but the solution stated in craft throws
             // an exception... So I'm using this one

@@ -6,21 +6,27 @@ class UsernotificationsService extends BaseApplicationComponent{
 
 
     /**
-     * Get all notifications for the current user
+     * Get all notifications for user
+     * if no user is set, it will fetch the current user
+     * so you can see how it would look like for others without logging out
      *
-     * @return string
+     * @param null $userId
+     * @return array|bool
      */
-    public function getAllNotificationsForUser(){
+    public function getAllNotificationsForUser($userId = null){
         // check if user is logged in...
-        if(!craft()->userSession->getUser()){
+        if(!$user = craft()->userSession->getUser() && $userId === null){
             return false;
+        }
+        if($userId === null){
+            $userId = $user->id;
         }
 
         // fetch all removed notifications of the user to not fetch them in our query
         $removedNotifications = craft()->db->createCommand()
             ->select('entryId')
             ->from('usernotifications')
-            ->where(['userId' => craft()->userSession->getUser()->id])
+            ->where(['userId' => $userId])
             ->queryColumn();
 
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
